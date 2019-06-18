@@ -22,6 +22,7 @@ class MainActivityViewModel extends ViewModel {
     private MutableLiveData<ChuckNorrisJoke> chuckNorrisJokeMutableLiveData = new MutableLiveData<>();
     private MutableLiveData<Boolean> loading = new MutableLiveData<>();
     private MutableLiveData<Event<Notification>> notificationEvent = new MutableLiveData<>();
+    private MutableLiveData<String[]> categories = new MutableLiveData<>();
 
     void callChuckApi(String category, final View view) {
         loading.postValue(true);
@@ -64,16 +65,43 @@ class MainActivityViewModel extends ViewModel {
         });
     }
 
+    void callChuckApiToGetCategories() {
+        loading.postValue(true);
+        Call<String[]> category_call = Repository.getInstance().getChuckService().getCategories();
+        category_call.enqueue(new Callback<String[]>() {
+            @Override
+            public void onResponse(Call<String[]> call, Response<String[]> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    response.body()[response.body().length - 1] = response.body()[0];
+                    response.body()[0] = "all";
+                    categories.postValue(response.body());
+                } else if (response.body() == null) {
+                    categories.postValue(new String[]{"No categories available"});
+                }
+                loading.postValue(false);
+            }
 
-    public LiveData<ChuckNorrisJoke> getChuckNorrisJokeMutableLiveData() {
+            @Override
+            public void onFailure(Call<String[]> call, Throwable t) {
+                categories.postValue(new String[]{"No categories available"});
+                loading.postValue(false);
+            }
+        });
+    }
+
+    LiveData<ChuckNorrisJoke> getChuckNorrisJokeMutableLiveData() {
         return chuckNorrisJokeMutableLiveData;
     }
 
-    public LiveData<Boolean> getLoading() {
+    LiveData<Boolean> getLoading() {
         return loading;
     }
 
-    public LiveData<Event<Notification>> getNotificationEvent() {
+    LiveData<Event<Notification>> getNotificationEvent() {
         return notificationEvent;
+    }
+
+    LiveData<String[]> getCategories() {
+        return categories;
     }
 }

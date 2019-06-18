@@ -2,6 +2,7 @@ package com.example.ricardo_pedrosa_trapero.ui;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private MainActivityViewModel viewModel;
     public static final String CHANNEL_ID = "1";
     private NotificationManagerCompat notificationManagerCompat;
+    private ArrayAdapter<String> spinnerArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +28,14 @@ public class MainActivity extends AppCompatActivity {
         b.setLifecycleOwner(this);
         viewModel = ViewModelProviders.of(this).get(MainActivityViewModel.class);
         initViews();
+        if (savedInstanceState == null) {
+            viewModel.callChuckApiToGetCategories();
+        }
         getJoke();
         observeData();
     }
 
     private void initViews() {
-        b.progressBar.setVisibility(View.INVISIBLE);
         notificationManagerCompat = NotificationManagerCompat.from(MainActivity.this);
         String background = "http://pngimg.com/uploads/chuck_norris/chuck_norris_PNG27.png";
         Picasso.with(b.ourSaviour.getContext()).load(background).error(R.drawable.ic_launcher_background)
@@ -55,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
             if (!notificationEvent.hasBeenHandled()) {
                 notificationManagerCompat.notify(1, notificationEvent.getContentIfNotHandled());
             }
+        });
+        viewModel.getCategories().observe(this, cats -> {
+            spinnerArrayAdapter = new ArrayAdapter<>(
+                    MainActivity.this,
+                    R.layout.spinner_sample, R.id.spinner_content,
+                    cats);
+            b.categorySpinner.setAdapter(spinnerArrayAdapter);
+            b.categorySpinner.setSelection(0);
         });
     }
 }

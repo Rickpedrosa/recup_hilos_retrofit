@@ -1,7 +1,6 @@
 package com.example.ricardo_pedrosa_trapero.data.remote;
 
 import com.example.ricardo_pedrosa_trapero.data.entity.RandomChuck;
-import com.example.ricardo_pedrosa_trapero.data.entity.RandomChuckByCategory;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
