@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Chuck Jokes LUL!</string>
+    <string name="chuck_advice_our_saviour">Don´t mess with him</string>
+    <string-array name="jokeCat">
+        <item>all</item>
+        <item>animal</item>
+        <item>career</item>
+        <item>celebrity</item>
+        <item>dev</item>
+        <item>explicit</item>
+        <item>food</item>
+        <item>history</item>
+        <item>money</item>
+        <item>movie</item>
+        <item>music</item>
+        <item>political</item>
+        <item>religion</item>
+        <item>science</item>
+        <item>sport</item>
+        <item>travel</item>
+    </string-array>
+</resources>
